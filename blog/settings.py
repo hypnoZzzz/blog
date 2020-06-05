@@ -1,15 +1,19 @@
-import dj_database_url
+import django_heroku
 import os
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-SECRET_KEY = '0cc3*s6*fs6qe4ti6!zq4jx4o7&9c64vr&2_z%q4s%3(6wbm(v'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'please-set-secret-key-through-env')
+# SECRET_KEY = '0cc3*s6*fs6qe4ti6!zq4jx4o7&9c64vr&2_z%q4s%3(6wbm(v'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'localhost:8000',
+    '127.0.0.1:8000',
+    'https://pure-taiga-60840.herokuapp.com/'
+]
 
 
 INSTALLED_APPS = [
@@ -23,6 +27,8 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+ROOT_URLCONF = 'blog.urls'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -32,8 +38,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-ROOT_URLCONF = 'blog.urls'
 
 TEMPLATES = [
     {
@@ -54,14 +58,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'blog.wsgi.application'
 
 
-DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -80,6 +82,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 LANGUAGE_CODE = 'en-us'
+
+django_heroku.settings(locals())
 
 TIME_ZONE = 'UTC'
 
